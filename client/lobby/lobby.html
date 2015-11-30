@@ -1,0 +1,7 @@
+<template name="Lobby">
+  {{#if currentUser}}
+    <label>Welcome {{currentUser.username}}</label>
+  {{else}}
+    <label>Please sign in.</label>
+  {{/if}}
+</template>

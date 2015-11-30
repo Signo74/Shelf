@@ -1,0 +1,28 @@
+/* CSS declarations go here */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.deleteCard {
+  position: absolute;
+  right: 0px;
+  top: 10px;
+}
+
+.card-panel {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.row {
+  margin-bottom: 5px;
+}
+
+.vertical-scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 150px;
+}
