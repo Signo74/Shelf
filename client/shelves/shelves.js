@@ -1,10 +1,12 @@
 let leftShelves = new ReactiveArray();
 let shelfTags = new ReactiveArray();
+let okCallback;
+let submitCallback;
 
 Template.ShelvesList.helpers({
   shelves: function() {
     initLeftShelves();
-    return Shelves.find().fetch();
+    return Shelves.find({},{sort:{createdOn:1}}).fetch();
   },
   unassignedShelves: function() {
     return leftShelves.list();
@@ -17,43 +19,39 @@ Template.ShelvesList.helpers({
 Template.ShelvesList.events({
   'submit .newShelf':function(event) {
     event.preventDefault();
-    let title = event.target.title.value;
-    let description = event.target.description.value;
-    Meteor.call('addShelf', title, description);
+    let title = $('#newShelfTitle').val();
+    let description = $('#newShelfDescription').val();
 
-    event.target.title.value = '';
-    event.target.description.value = '';
+    submitCallback(title, description);
+
+    $('#newShelfTitle').val('');
+    $('#newShelfDescription').val('');
     $('#newShelf').closeModal();
+
+    submitCallback = function() {
+      $('#newBook').closeModal();
+    }
   },
   'submit .newBook': function(event) {
     event.preventDefault();
-
-    let form = event.target;
-    let title = form.title.value;
-    let author = form.author.value;
-    let description = form.description.value;
+    let title = $('#newBookTitle').val();
+    let author = $('#newBookAuthor').val();
+    let description = $('#newBookDescription').val();
     let shelves = shelfTags.array();
 
-    console.log(`title: ${title}, author: ${author}, desc: ${description}, shelves: ${shelves}`);
+    submitCallback(title, author, description, shelves);
 
-    // TODO ceate a method for inserting Books and call it.
-    Meteor.call('addBook', title, author, description, shelves, function(error, result){
-      if(error){
-        // TODO make a practice of showing an error message!
-        console.log("error", error);
-      }
-      if(result){
-        // TODO if necessary handle the result
-      }
-    });
-
-    form.title.value = '';
-    form.author.value = '';
-    form.description.value = '';
+    $('#newBookTitle').val('');
+    $('#newBookAuthor').val('');
+    $('#newBookDescription').val('');
     $('#shelvesSelect').val('');
     initLeftShelves();
 
     $('#newBook').closeModal();
+
+    submitCallback = function() {
+      $('#newBook').closeModal();
+    }
   },
   'change .shelvesSelect': function() {
     let id = $('#shelvesSelect').val();
@@ -64,19 +62,36 @@ Template.ShelvesList.events({
     shelfTags.push(tag);
     removeItemByID(leftShelves, id);
     $('#shelvesSelect').val('');
+  },
+  'click .close': function(event) {
+    event.preventDefault();
+    let button = event.target;
+    $(button).closest('div.modal').closeModal();
   }
 })
 
 Template.Shelf.events({
   'click .remove': function() {
     // Open the confirmation dialog.
-    tempShelfID = this._id;
-     $('#dialog').openModal();
+    let id = this._id;
+
+    okCallback = function() {
+      Meteor.call('deleteShelf', id);
+    }
+
+    // TODO move all messages to a file for easier localization.
+    $('#dialogContent').html(`Are you sure you want to delete the ${this.title} Shelf?<br>This change will be permanent and there is no way to undo it!`);
+    
+    $('#dialog').openModal();
   },
   'click .addBook': function() {
     let tag = {
       id: this._id,
       title: this.title
+    }
+
+    submitCallback = function(title, author, description, shelves) {
+      Meteor.call('addBook', title, author, description, shelves);
     }
 
     shelfTags.push(tag);
@@ -85,7 +100,15 @@ Template.Shelf.events({
     $('#newBook').openModal();
   },
   'click .edit':function() {
-    // TODO  Edit the shelf's properties.
+    let shelfID = this._id;
+    submitCallback = function(title, description) {
+      Meteor.call('updateShelf', shelfID, title, description);
+    }
+
+    $('#newShelfTitle').val(this.title);
+    $('#newShelfDescription').val(this.desc);
+
+    $('#newShelf').openModal();
   }
 });
 
@@ -100,23 +123,80 @@ Template.Shelf.helpers({
   }
 });
 
-Template.CommonDialog.events({
-  'click .confirm': function() {
-    // Delete the shelf entry.
-    Meteor.call('deleteShelf', tempShelfID);
-    $('#dialog').closeModal();
-  },
-  'click .cancel': function() {
-    $('#dialog').closeModal();
-  }
-})
-
 Template.AddShelf.events({
   'click .addShelf': function(event) {
     event.preventDefault();
+
+        submitCallback = function(title, description) {
+          Meteor.call('addShelf', title, description);
+        }
+
     $('#newShelf').openModal();
   },
   'click .addBook': function() {
+    shelfTags.splice(0, shelfTags.length);
+
+    submitCallback = function(title, author, description, shelves) {
+      Meteor.call('addBook', title, author, description, shelves, function(error, result){
+        if(error){
+          // TODO make a practice of showing an error message!
+          console.log("error", error);
+        }
+        if(result){
+          // TODO if necessary handle the result
+        }
+      });
+    }
+    $('#newBook').openModal();
+  }
+});
+
+Template.BookThumbnail.events({
+  "click .remove": function(event){
+    event.stopPropagation();
+    let bookID = this._id;
+    let shelf = Template.parentData(1);
+
+    okCallback = function() {
+      Meteor.call('removeBookFromShelf', bookID, shelf._id);
+    }
+
+    // TODO move all messages to a file for easier localization.
+    $('#dialogContent').html(`Are you sure you want to remove ${this.title} from your ${shelf.title} Shelf?<br>This change will be permanent and there is no way to undo it!`);
+
+    $('#dialog').openModal();
+  },
+  "click .delete": function(){
+    let bookID = this._id;
+
+    okCallback = function() {
+      Meteor.call('deleteBook', bookID);
+    }
+
+    // TODO move all messages to a file for easier localization.
+    $('#dialogContent').html(`Are you sure you want to delete ${this.title} from your collection?<br>This change will be permanent and there is no way to undo it!`);
+
+    $('#dialog').openModal();
+  },
+  "click .edit": function(event){
+    event.stopPropagation();
+    let bookID = this._id;
+
+    $('#newBookTitle').val(this.title);
+    $('#newBookAuthor').val(this.author);
+    $('#newBookDescription').val(this.description);
+
+    // Empty the tags array first
+    shelfTags.splice(0, shelfTags.length);
+
+    for (let i = 0 ; i < this.shelves.length ; i++) {
+      shelfTags.push(this.shelves[i]);
+    }
+
+    submitCallback = function(title, author, description, shelves) {
+      Meteor.call('quickUpdateBook', bookID, title, author, description, shelves);
+    }
+
     $('#newBook').openModal();
   }
 });
@@ -130,14 +210,21 @@ Template.ShelfTag.events({
     removeItemByID(shelfTags, this.id);
     leftShelves.push(shelf);
   }
-})
-
-Template.BookThumbnail.events({
-  "click .remove": function(){
-    console.log(this._id);
-  }
 });
 
+Template.CommonDialog.events({
+  'click .confirm': function() {
+    // Delete the shelf entry.
+    okCallback();
+    $('#dialog').closeModal();
+    okCallback = function() {
+      $('#dialog').closeModal();
+    }
+  },
+  'click .cancel': function() {
+    $('#dialog').closeModal();
+  }
+})
 
 Template.ShelvesList.onCreated(function() {
   let self = this;
@@ -149,8 +236,6 @@ Template.ShelvesList.onCreated(function() {
 Template.Shelf.onCreated(function() {
   let self = this;
   self.subscribe('books');
-  // self.autorun(function() {
-  // })
 });
 
 function initLeftShelves() {

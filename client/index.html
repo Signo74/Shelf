@@ -1,7 +1,7 @@
 <template name="main">
   {{> Navigation}}
   <div class="row">
-    <div class="col s12">
+    <div class="col s11">
       {{> Template.dynamic template=content}}
     </div>
   </div>
@@ -15,10 +15,10 @@
     <div id="dialog" class="modal">
       <div class="modal-content">
         <div class="row">
-          <label>Warning!</label>
+          <label id="dialogTitle">Warning!</label>
         </div>
         <div class="row">
-          <p>
+          <p id="dialogContent">
             Are you sure?
           </p>
         </div>

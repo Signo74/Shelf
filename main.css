@@ -33,3 +33,15 @@
   overflow-y: scroll;
   max-height: 150px;
 }
+
+.clean {
+  margin: 0;
+  padding: 0;
+}
+
+i.x-small {
+  font-size: 1.5rem;
+}
+a {
+  cursor: pointer;
+}
