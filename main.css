@@ -11,6 +11,13 @@
   top: 10px;
 }
 
+.deleteCard-sm {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding-right:5px;
+}
+
 .card-panel {
   position: relative;
   padding: 10px;

@@ -11,6 +11,16 @@ Meteor.startup(function () {
     deleteShelf: function(id) {
       Shelves.remove({_id: id})
     },
+    addBook: function(title, author, description, shelves) {
+      Books.insert({
+        title: title,
+        author: author,
+        desc: description,
+        shelves: shelves,
+        addedOn: new Date(),
+        owner: Meteor.user()._id
+      })
+    },
     searchForBook: function(searchTerm, callback) {
       var searchURL = 'https://www.googleapis.com/customsearch/v1?';
       var searchTermObj = {

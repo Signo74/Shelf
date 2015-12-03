@@ -9,7 +9,7 @@ FlowRouter.route('/shelves', {
   name: 'shelvesList',
   triggersEnter: [checkLogin],
   action: function() {
-    BlazeLayout.render('main', { sideNav: 'ShelvesActions',content: 'ShelvesList', fab: 'AddShelf'});
+    BlazeLayout.render('main', {content: 'ShelvesList', fab: 'AddShelf'});
   }
 });
 

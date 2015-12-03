@@ -29,27 +29,31 @@
     <form class="newBook">
       <div class="modal-content">
         <div class="input-field row">
-          <input id="title" type="text" class="validate">
+          <input id="title" name="title" type="text" class="validate">
           <label for="title">Title</label>
         </div>
         <div class="input-field row">
-          <input id="author" type="text" class="validate">
+          <input id="author" name="author" type="text" class="validate">
           <label for="author">Author</label>
         </div>
         <div class="input-field row">
-          <textarea id="description" type="text" class="materialize-textarea">
-          </textarea>
+          <textarea id="description" name="description" type="text" class="materialize-textarea"></textarea>
           <label for="description">Description</label>
         </div>
         <div class="row">
-          <div class="input-field col s12">
-            <select id="shelves" name="shelves" multiple>
-              <option value="" disabled selected>Add to Shelves</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
-            </select>
+          <div class="col s12 m6">
             <label>Add to Shelves</label>
+            <select id="shelvesSelect" name="shelves" class="shelvesSelect browser-default">
+              <option value="" disabled selected></option>
+              {{#each unassignedShelves}}
+                {{> ShelfOption}}
+              {{/each}}
+            </select>
+          </div>
+          <div class="col s12 m6">
+            {{#each selectedShelves}}
+              {{> ShelfTag}}
+            {{/each}}
           </div>
         </div>
       </div>
@@ -64,7 +68,7 @@
 
 <template name="Shelf">
   <div class="row card-panel teal">
-    <a class="btn-flat deleteCard">
+    <a class="btn-flat deleteCard remove">
       <i class="tiny material-icons">close</i>
     </a>
     <div class="col s12">
@@ -103,15 +107,40 @@
       <i class="large material-icons">add</i>
     </a>
     <ul>
-      <li><a class="btn-floating teal accent-4"><i class="material-icons">import_contacts</i></a></li>
+      <li><a class="btn-floating teal accent-4 addBook"><i class="material-icons">import_contacts</i></a></li>
       <li><a class="btn-floating teal accent-4 addShelf"><i class="material-icons">library_books</i></a></li>
     </ul>
   </div>
 </template>
 
 <template name="BookThumbnail">
-  <div class="col s2" align="center">
-    <i class="material-icons large white-text">import_contacts</i>
-    <label class="white-text">title</label>
+  <div class="col s2 card-panel teal lighten-1" align="center">
+    <a class="btn-flat deleteCard-sm remove">
+      <i class="tiny material-icons">close</i>
+    </a>
+
+    <div class="row">
+      <i class="material-icons large white-text">import_contacts</i>
+    </div>
+    <div class="row">
+      <label class="white-text">{{title}}</label>
+    </div>
+  </div>
+</template>
+
+<template name="ShelfOption">
+  <option value="{{_id}}">
+    {{title}}
+  </option>
+</template>
+
+<template name="ShelfTag">
+  <div class="row">
+    <div class="chip">
+      {{title}}
+      <a class="remove">
+        <i class="material-icons">close</i>
+      </a>
+    </div>
   </div>
 </template>
