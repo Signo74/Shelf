@@ -1,0 +1,32 @@
+<template name="Reviews">
+  <form id="addReview" class="row">
+    <div class="col s12">
+      <div class="row">
+        <label>Title</label>
+        <input id="newCommentTitle" type="text" />
+      </div>
+      <div class="row">
+        <label>Content</label>
+        <textarea id="newCommendContent">
+        </textarea>
+      </div>
+    </div>
+    <button class="btn teal" type="submit">Submit</button>
+  </form>
+  {{# each reviews}}
+    {{> Review}}
+  {{/each}}
+</template>
+
+<template name="Review">
+  <div class="row">
+    <div class="col s12 card-panel">
+      <label>
+        Superb!
+      </label>
+      <p>
+        This book is amazing.
+      </p>
+    </div>
+  </div>
+</template>

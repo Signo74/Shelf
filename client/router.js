@@ -1,8 +1,16 @@
 FlowRouter.route('/', {
   name: 'lobby',
+  triggersEnter: [checkLogin],
   action: function() {
-    BlazeLayout.render('main', { content: "Lobby"});
-  }
+    if (Meteor.users.find({}).fetch().length > 0) {
+      // TODO set the home dashboard here. News, statistics, friend requests, etc.
+      // TODO remove shelves once the above is done.
+      BlazeLayout.render('main', {content: 'ShelvesList', fab: 'AddShelf'});
+    } else {
+      BlazeLayout.render('main', { content: "NotLoggedIn"});
+    }
+  },
+  triggersExit: [nullifyAll]
 });
 
 FlowRouter.route('/shelves', {
@@ -10,17 +18,31 @@ FlowRouter.route('/shelves', {
   triggersEnter: [checkLogin],
   action: function() {
     BlazeLayout.render('main', {content: 'ShelvesList', fab: 'AddShelf'});
-  }
+  },
+  triggersExit: [nullifyAll]
 });
 
+FlowRouter.route('/book/:id', {
+  name: 'shelvesList',
+  triggersEnter: [checkLogin],
+  action: function() {
+    BlazeLayout.render('main', {content: 'Book'});
+  },
+  triggersExit: [nullifyAll]
+});
 
-function checkLogin(context) {
-  // context is the output of `FlowRouter.current()`
-  if (!Meteor.user()) {
-    FlowRouter.go('/');
-  }
-}
-
+FlowRouter.route('/tests', {
+  triggersEnter: [checkLogin],
+  action: function() {
+    let user = Meteor.users.find({}).fetch()[0];
+    if(user.profile && user.profile.toLowerCase() === 'administrator') {
+      BlazeLayout.render('main', {content: 'Tests'});
+    } else {
+      BlazeLayout.render('main', {content: 'NotAuthorised'});
+    }
+  },
+  triggersExit: [nullifyAll]
+});
 
 FlowRouter.notFound = {
     action: function() {

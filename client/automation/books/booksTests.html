@@ -1,0 +1,31 @@
+<template name="BookTests">
+  <div class="row">
+    <form id="insertBooks" class="col s12">
+      <div class="row">
+        <label>Number of books to create</label>
+        <input id="number" name="count" type="number" />
+      </div>
+      <div class="row">
+        <label>Book name prefix</label>
+        <input id="namePrefix" name="namePrefix" type="text">
+      </div>
+      <div class="row">
+        <label>Shelfs:</label>
+        <select id="shelvesSelect" name="shelves" class="shelvesSelect browser-default" tabindex="4">
+          <option value="" disabled selected>Select shelf</option>
+          {{#if Template.subscriptionsReady}}
+            {{#each shelves}}
+              {{> ShelfOption}}
+            {{/each}}
+          {{/if}}
+        </select>
+      </div>
+      <div class="row">
+        {{#each selectedShelves}}
+          {{> ShelfTag}}
+        {{/each}}
+      </div>
+      <button type="submit" class="btn teal">Execute</button>
+    </form>
+  </div>
+</template>

@@ -9,3 +9,7 @@ Meteor.publish('shelves', function() {
 Meteor.publish('books', function() {
   return Books.find();
 })
+
+Meteor.publish('book', function(bookId){
+  return Books.find({_id: bookId});
+});

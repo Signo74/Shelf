@@ -22,6 +22,8 @@ Meteor.startup(function () {
     },
     // Book related methods
     addBook: function(title, author, description, shelves) {
+      let date = new Date();
+      let dateStr = date.toDateString();
       Books.insert({
         title: title,
         author: author,

@@ -45,3 +45,7 @@ i.x-small {
 a {
   cursor: pointer;
 }
+
+.action-available {
+  cursor: pointer;
+}

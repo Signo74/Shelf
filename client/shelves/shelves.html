@@ -47,7 +47,7 @@
             <label>Add to Shelves</label>
             <select id="shelvesSelect" name="shelves" class="shelvesSelect browser-default" tabindex="4">
               <option value="" disabled selected>Select shelf</option>
-              {{#each unassignedShelves}}
+              {{#each shelves}}
                 {{> ShelfOption}}
               {{/each}}
             </select>
@@ -119,7 +119,7 @@
 
 <template name="BookThumbnail">
   <div class="col s3">
-    <div class="card panel teal lighten-1" align="center">
+    <div class="bookItem action-available card-panel teal lighten-1" align="center">
       <ul class="deleteCard-sm clean">
         <li>
           <a class="clean remove black-text">
@@ -145,23 +145,6 @@
       <div class="row">
         <label class="white-text">{{title}}</label>
       </div>
-    </div>
-  </div>
-</template>
-
-<template name="ShelfOption">
-  <option value="{{_id}}">
-    {{title}}
-  </option>
-</template>
-
-<template name="ShelfTag">
-  <div class="row">
-    <div class="chip">
-      {{title}}
-      <a class="remove">
-        <i class="material-icons">close</i>
-      </a>
     </div>
   </div>
 </template>

@@ -1,0 +1,19 @@
+<template name="Comments">
+  <form id="addComment" class="row">
+      <input id="newComment" type="text" />
+      <button class="btn teal" type="submit">Add Comments</button>
+  </form>
+  {{# each comments}}
+    {{> Comment}}
+  {{/each}}
+</template>
+
+<template name="Comment">
+  <div class="row">
+    <div class="col s12 card-panel">
+      <p>
+        Your comment will appear here.
+      </p>
+    </div>
+  </div>
+</template>

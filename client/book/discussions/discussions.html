@@ -1,0 +1,37 @@
+<template name="Discussions">
+  <form id="startDiscussion" class="row">
+    <div class="col s12">
+        <div class="row">
+          <label id="newDiscussionTitleLabel">Title</label>
+          <input id="newDiscussionTitle" type="text" />
+        </div>
+        <div class="row">
+          <label id="newDiscussionContentLabel">Content</label>
+          <textarea id="newDiscussionContent">
+          </textarea>
+        </div>
+        <div class="row">
+          <input type="checkbox" id="hasSpoilers" />
+          <label for="hasSpoilers">Spoilers</label>
+        </div>
+    </div>
+    <button class="btn teal" type="submit">Start Discussion</button>
+  </form>
+  {{# each discussions}}
+    {{> Discussion}}
+  {{/each}}
+</template>
+
+<template name="Discussion">
+  <div class="row">
+    <div class="col s12 card-panel">
+      <label>
+        What is this book about?
+      </label>
+      <label>
+        Comments: 3
+      </label>
+      <button class="btn teal lighten-3">Join</button>
+    </div>
+  </div>
+</template>

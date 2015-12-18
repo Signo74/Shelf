@@ -1,0 +1,55 @@
+<template name="Book">
+  <div class="row">
+    <article id="dataAndComments" class="col s8">
+        {{#with book}}
+        <section id="bookData" class="row">
+          <div class="col s12">
+            <div class="row">
+              <label>Author</label>
+              <input id="author" name="author" type="text" value={{author}} />
+            </div>
+            <div class="row">
+              <label>Title</label>
+              <input id="title" name="title" type="text" value={{title}} />
+            </div>
+            <div class="row">
+              <label>Description</label>
+              <textarea id="description" name="description">
+                {{desc}}
+              </textarea>
+            </div>
+            <div class="row">
+              <label>In shelves:</label>
+            </div>
+            <div class="row">
+              <label>Added:</label>
+              <input id="added" name="added" type="date" class="datepicker" value={{addedOn}}  />
+            </div>
+            <div class="row">
+              <label>Read:</label>
+              <input id="read" name="read" type="date" class="datepicker" value={{readOn}} />
+            </div>
+          </div>
+        </section>
+        <section id="commentsAndQuestions" class="row">
+          <div class="row">
+            <div class="col s12">
+              <ul class="tabs">
+                <li class="tab col s3"><a data-tab="Reviews" class="social acitve" href="#reviews">Reviews</a></li>
+                <li class="tab col s3"><a data-tab="Discussions" class="social" href="#questions">Discussions</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              {{> Template.dynamic template=socialTab}}
+            </div>
+          </div>
+        </section>
+        {{/with}}
+    </article>
+    <article id="actions" class="col s4">
+
+    </article>
+  </div>
+</template>
