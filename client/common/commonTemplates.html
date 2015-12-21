@@ -14,3 +14,36 @@
     </div>
   </span>
 </template>
+
+<template name="SearchResults">
+  <div class="row vertical-scroll">
+    <div class="col s12">
+      <div class="row searchEntry">
+        <div class="col s2">
+          <label>Cover</label>
+        </div>
+        <div class="col s5">
+          Title
+        </div>
+        <div class="col s5">
+          Author(s)
+        </div>
+      </div>
+      {{# each searchResults}}
+        <div class="row searchEntry">
+          <div class="col s2">
+            <img src={{volumeInfo.imageLinks.smallThumbnail}} heigh="80" width="40">
+          </div>
+          <div class="col s5">
+            {{volumeInfo.title}}
+          </div>
+          <div class="col s5">
+            {{# each volumeInfo.authors}}
+              {{this}},
+            {{/ each}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

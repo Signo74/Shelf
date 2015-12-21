@@ -9,7 +9,7 @@
       <div class="modal-content">
         <div class="row">
           <label for="title">Title</label>
-          <input id="newShelfTitle" type="text" class="validate" tabindex="1">
+          <input id="newShelfTitle" type="text" class="validate" tabindex="1" />
         </div>
         <div class="row">
           <label for="description">Description</label>
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="submit" class="btn waves-effect waves-light" type="submit" name="action"  tabindex="3">Submit
+        <button id="submitShelf" class="btn waves-effect waves-light" type="submit" name="action"  tabindex="3">Submit
           <i class="material-icons right">send</i>
         </button>
         <button id="cancel" class="btn waves-effect waves-light close" name="action" tabindex="5">Cancel
@@ -31,12 +31,24 @@
     <form class="newBook">
       <div class="modal-content">
         <div class="row">
-          <label for="title">Title</label>
-          <input id="newBookTitle" name="title" type="text" class="validate"  tabindex="1">
-        </div>
-        <div class="row">
-          <label for="author">Author</label>
-          <input id="newBookAuthor" name="author" type="text" class="validate"  tabindex="2">
+          <div class="col s3">
+            <img id="newBookThumbnail"/>
+            <i id="tempBookIcon" class="material-icons large">import_contacts</i>
+          </div>
+          <div class="col s9">
+            <div class=" input-field row">
+              <a class="clean prefix">
+                <i class="material-icons">search</i>
+              </a>
+              <input id="newBookTitle" name="title" type="text" class="validate active"  tabindex="1">
+              <label for="newBookTitle">Title</label>
+            </div>
+            {{> SearchResults}}
+            <div class="row input-field">
+              <label for="author">Author</label>
+              <input id="newBookAuthor" name="author" type="text" class="validate"  tabindex="2">
+            </div>
+          </div>
         </div>
         <div class="row">
           <label for="description">Description</label>
@@ -60,7 +72,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="submit" class="btn waves-effect waves-light" type="submit" name="action" tabindex="5">Submit
+        <button id="submitBook" class="btn waves-effect waves-light" type="submit" name="action" tabindex="5">Submit
           <i class="material-icons right">send</i>
         </button>
         <button id="cancel" class="btn waves-effect waves-light close" name="action" tabindex="5">Cancel

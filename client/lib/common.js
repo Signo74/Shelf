@@ -1,4 +1,5 @@
 shelfTags = new ReactiveArray();
+searchedBooks = new ReactiveArray();
 
 $(function() {
   $('body').on('change', '#shelvesSelect', function(event) {
@@ -21,6 +22,10 @@ Template.registerHelper("selectedShelves", function(){
   return shelfTags.list();
 });
 
+Template.registerHelper("searchResults", function(){
+  return searchedBooks.list();
+});
+
 Template.ShelfTag.events({
   'click a.remove': function(event) {
     event.preventDefault();
@@ -29,6 +34,30 @@ Template.ShelfTag.events({
     removeItemByID(shelfTags, this.id);
   }
 });
+
+searchForBook = function(title) {
+  // TODO check Mongo for entries first so that you save an extra GAPI call.
+  if (title != '') {
+    console.log(title);
+    Meteor.call('bookSearch', title, function(error, result) {
+      if (error) {
+        // TODO show message to user
+        console.log(error);
+        return false;
+      }
+      // reset old results and block submition
+      searchedBooks.splice(0, searchedBooks.length);
+      $('#submitBook').prop('disabled', true);
+
+      let books = JSON.parse(result.content);
+      count = books.items.length;
+
+      for (let i = 0 ; i < count ; i++) {
+        searchedBooks.push(books.items[i]);
+      }
+    });
+  }
+}
 
 searchArrayItemByID = function(item, array) {
   for (let i = 0 ; i < array.length ; i++) {
@@ -56,8 +85,9 @@ addTag = function(tag) {
   shelfTags.push(tag);
 }
 
-clearShelfTags = function() {
+cleanupBookModal = function() {
   shelfTags.splice(0, shelfTags.length);
+  searchedBooks.splice(0, searchedBooks.length);
 }
 
 
@@ -69,5 +99,5 @@ checkLogin = function(context) {
 }
 
 nullifyAll = function() {
-  clearShelfTags();
+  cleanupBookModal();
 }

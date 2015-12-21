@@ -8,7 +8,36 @@ Template.ShelvesList.helpers({
 });
 
 Template.ShelvesList.events({
-  'submit .newShelf':function(event) {
+  'change #newBookTitle': function(event) {
+    let title = event.target.value;
+    searchForBook(title);
+  },
+  'click #searchBook': function(event) {
+    let title = $('#newBookTitle').val();
+    searchForBook(title);
+  },
+  'click div.searchEntry': function() {
+    // TODO change this to the logger object
+    console.log(this);
+
+    let book = this.volumeInfo;
+    let authorsCount = book.authors.length;
+    let authors = '';
+
+    for (let i = 0 ; i < authorsCount ; i++) {
+      if (i === (authorsCount - 1)) {
+        authors += book.authors[i];
+      } else {
+        authors += book.authors[i] + ', ';
+      }
+    }
+
+    $('#newBookAuthor').val(authors);
+    $('#newBookDescription').text(book.description);
+    $('#tempBookIcon').addClass('hidden');
+    $('#newBookThumbnail').prop('src', book.imageLinks.thumbnail);
+  },
+  'submit .newShelf': function(event) {
     event.preventDefault();
     let title = $('#newShelfTitle').val();
     let description = $('#newShelfDescription').val();
@@ -24,6 +53,10 @@ Template.ShelvesList.events({
     }
   },
   'submit .newBook': function(event) {
+    // TODO check the Mongo for a book entry first to avoid duplicates.
+    // TODO add all the extra, non-visible properties such as genre, page count,
+    // thumbnail urls, etc.
+
     event.preventDefault();
     let title = $('#newBookTitle').val();
     let author = $('#newBookAuthor').val();
@@ -115,7 +148,7 @@ Template.AddShelf.events({
     $('#newShelf').openModal();
   },
   'click .addBook': function() {
-    clearShelfTags();
+    cleanupBookModal();
 
     submitCallback = function(title, author, description, shelves) {
       Meteor.call('addBook', title, author, description, shelves, function(error, result){
@@ -169,7 +202,7 @@ Template.BookThumbnail.events({
     $('#newBookDescription').val(this.description);
 
     // Empty the tags array first
-    clearShelfTags();
+    cleanupBookModal();
 
     for (let i = 0 ; i < this.shelves.length ; i++) {
       shelfTags.push(this.shelves[i]);
@@ -203,7 +236,8 @@ Template.CommonDialog.events({
 Template.ShelvesList.onCreated(function() {
   let self = this;
   self.autorun(function() {
-      self.subscribe('shelves');
+    self.subscribe('shelves');
+    self.subscribe('search_params');
   })
 });
 

@@ -21,7 +21,7 @@ Template.BookTests.events({
 
     event.target.count.value = null;
     event.target.namePrefix.value = '';
-    clearShelfTags();
+    cleanupBookModal();
   }
 });
 
