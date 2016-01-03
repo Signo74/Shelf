@@ -1,7 +1,7 @@
 let currentTab = new ReactiveVar('Reviews');
 
 Template.Book.helpers({
-  book: function() {
+  volume: function() {
     let bookID = FlowRouter.getParam('id');
     let book = Books.findOne({_id: bookID}) || {};
 

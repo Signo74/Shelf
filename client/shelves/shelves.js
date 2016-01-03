@@ -1,5 +1,6 @@
 let okCallback;
 let submitCallback;
+let selectedBook;
 
 Template.ShelvesList.helpers({
   shelves: function() {
@@ -20,6 +21,9 @@ Template.ShelvesList.events({
     // TODO change this to the logger object
     console.log(this);
 
+    // Assign the selected book
+    selectedBook = this;
+
     let book = this.volumeInfo;
     let authorsCount = book.authors.length;
     let authors = '';
@@ -35,7 +39,9 @@ Template.ShelvesList.events({
     $('#newBookAuthor').val(authors);
     $('#newBookDescription').text(book.description);
     $('#tempBookIcon').addClass('hidden');
+    $('#tempBookIcon').removeClass('material-icons');
     $('#newBookThumbnail').prop('src', book.imageLinks.thumbnail);
+    $('#submitBook').prop('disabled', false);
   },
   'submit .newShelf': function(event) {
     event.preventDefault();
@@ -63,7 +69,7 @@ Template.ShelvesList.events({
     let description = $('#newBookDescription').val();
     let shelves = shelfTags.array();
 
-    submitCallback(title, author, description, shelves);
+    Meteor.call('addBook', selectedBook, shelves);
 
     $('#newBookTitle').val('');
     $('#newBookAuthor').val('');
@@ -103,6 +109,8 @@ Template.Shelf.events({
       title: this.title
     }
 
+    $('#tempBookIcon').addClass('material-icons');
+
     submitCallback = function(title, author, description, shelves) {
       Meteor.call('addBook', title, author, description, shelves);
     }
@@ -128,8 +136,7 @@ Template.Shelf.events({
 
 Template.Shelf.helpers({
   books: function() {
-    return Books.find({owner: Meteor.user()._id,
-                      shelves: {
+    return Books.find({shelves: {
                         $elemMatch: {
                           id: this._id
                         }

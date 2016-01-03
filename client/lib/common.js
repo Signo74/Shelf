@@ -38,7 +38,6 @@ Template.ShelfTag.events({
 searchForBook = function(title) {
   // TODO check Mongo for entries first so that you save an extra GAPI call.
   if (title != '') {
-    console.log(title);
     Meteor.call('bookSearch', title, function(error, result) {
       if (error) {
         // TODO show message to user

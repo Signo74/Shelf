@@ -1,34 +1,64 @@
 <template name="Book">
   <div class="row">
     <article id="dataAndComments" class="col s8">
-        {{#with book}}
+        {{#with volume}}
         <section id="bookData" class="row">
           <div class="col s12">
             <div class="row">
-              <label>Author</label>
-              <input id="author" name="author" type="text" value={{author}} />
-            </div>
-            <div class="row">
-              <label>Title</label>
-              <input id="title" name="title" type="text" value={{title}} />
+              <div class="col s4">
+                <img src="{{book.volumeInfo.imageLinks.thumbnail}}" />
+              </div>
+              <div class="col s8">
+                <div class="row">
+                  <h5 id="title">
+                    {{book.volumeInfo.title}}
+                  </h5>
+                </div>
+                <div class="row">
+                  {{#each book.volumeInfo.authors}}
+                    <h6 class="author">
+                      {{this}}
+                    </h6>
+                  {{/each}}
+                </div>
+                <div class="row">
+                  <label>Pages:</label>
+                  <label>{{book.volumeInfo.pageCount}}</label>
+                </div>
+                <div class="row">
+                  <label>Genres:</label>
+                  {{#each book.volumeInfo.categories}}
+                    <label>{{this}}</label>
+                  {{/each}}
+                </div>
+                <div class="row">
+                  <label>Shelves:</label>
+                  {{#each shelves}}
+                    <label>{{this.title}}</label>
+                  {{/each}}
+                </div>
+              </div>
             </div>
             <div class="row">
               <label>Description</label>
-              <textarea id="description" name="description">
-                {{desc}}
-              </textarea>
-            </div>
-            <div class="row">
-              <label>In shelves:</label>
+              <p id="description">
+                {{book.volumeInfo.description}}
+              </p>
             </div>
             <div class="row">
               <label>Added:</label>
-              <input id="added" name="added" type="date" class="datepicker" value={{addedOn}}  />
+              <label id="added">
+              {{addedOnPretty}}
+              </label>
             </div>
-            <div class="row">
-              <label>Read:</label>
-              <input id="read" name="read" type="date" class="datepicker" value={{readOn}} />
-            </div>
+            {{#if readOn}}
+              <div class="row">
+                <label>Read on:</label>
+                <label id="read">
+                  {{readOnPretty}}
+                </label>
+              </div>
+            {{/if}}
           </div>
         </section>
         <section id="commentsAndQuestions" class="row">

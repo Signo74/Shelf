@@ -21,16 +21,16 @@
         }})
       },
       // Book related methods
-      addBook: function(title, author, description, shelves) {
+      addBook: function(book, shelves) {
         let date = new Date();
         let dateStr = date.toDateString();
+
         Books.insert({
-          title: title,
-          author: author,
-          desc: description,
+          book: book,
           shelves: shelves,
-          addedOn: new Date(),
-          owner: Meteor.user()._id
+          addedOn: date,
+          addedOnPretty: dateStr, 
+          contributor: Meteor.user()._id
         })
       },
       deleteBook: function(id) {
@@ -73,7 +73,6 @@
         let results = {};
         try {
           results = HTTP.get(searchURL);
-          console.log(results);
           return results;
         } catch (ex) {
           let message = `Could not retrieve search results for title: ${searchTerm}`
