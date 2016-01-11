@@ -127,22 +127,28 @@
           return `Could not retrieve search results for title: ${searchTerm}`;
         }
       },
-      addReview: function(score, bookId, title, content) {
+      addReview: function(bookId, score, title, content) {
         let date = new Date();
         let dateStr = date.toDateString()
-        console.log(score);
-        console.log(bookId);
-        console.log(title);
-        console.log(content);
-        if ((score > 0 && score < 6) && bookId && title && content) {
+
+        if (title === undefined) {
+          title = '';
+        }
+
+        if (content === undefined) {
+          content = '';
+        }
+
+        if ((score > 0 && score < 6) && bookId) {
           Reviews.insert({
             book: bookId,
             title: title,
             score: score,
             content: content,
-            author: Meteor.user()._id,
+            author: Meteor.user().username,
+            authorId: Meteor.user()._id,
             addedOn: date,
-            addedOnString: dateStr
+            addedOnPretty: dateStr
           })
         }
       }
