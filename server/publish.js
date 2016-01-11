@@ -3,7 +3,7 @@ Meteor.publish('search_params', function() {
 });
 
 Meteor.publish('shelves', function() {
-  return Shelves.find({owner: this.userId},{title:1, desc:1});
+  return Shelves.find({owner: this.userId});
 });
 
 Meteor.publish('books', function() {
@@ -13,3 +13,7 @@ Meteor.publish('books', function() {
 Meteor.publish('book', function(bookId){
   return Books.find({_id: bookId});
 });
+
+Meteor.publish('reviews', function(bookId) {
+  return Reviews.find({book: bookId});
+})

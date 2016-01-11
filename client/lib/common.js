@@ -7,7 +7,7 @@ $(function() {
 
     let id = $(this).val();
     let tag = {
-      id: id,
+      _id: id,
       title: $('#shelvesSelect option:selected').text()
     }
     if (!searchArrayItemByID(tag, shelfTags)) {
@@ -35,23 +35,40 @@ Template.ShelfTag.events({
   }
 });
 
-searchForBook = function(title) {
+searchForBook = function(query) {
   // TODO check Mongo for entries first so that you save an extra GAPI call.
-  if (title != '') {
-    Meteor.call('bookSearch', title, function(error, result) {
+  if (query != '' && query != undefined) {
+    // Reset the previous search results
+    searchedBooks.splice(0, searchedBooks.length);
+
+    Meteor.call('getBooksFromDB', query, function(error, result) {
       if (error) {
         // TODO show message to user
         console.log(error);
         return false;
       }
-      // reset old results and block submition
-      searchedBooks.splice(0, searchedBooks.length);
-      $('#submitBook').prop('disabled', true);
 
+      for (let i = 0 ; i < result.length ; i++) {
+        searchedBooks.push(result[i].book);
+      }
+    });
+    Meteor.call('bookSearch', query, function(error, result) {
+      if (error) {
+        // TODO show message to user
+        console.log(error);
+        return false;
+      }
       let books = JSON.parse(result.content);
-      count = books.items.length;
+      let count = books.items.length;
+      let alreadyAddedCount = searchedBooks.length;
 
+searcheResults:
       for (let i = 0 ; i < count ; i++) {
+        for (let j = 0 ; j < alreadyAddedCount ; j++) {
+          if (compareBookObjects(searchedBooks[j], books.items[i])) {
+            continue searcheResults;
+          }
+        }
         searchedBooks.push(books.items[i]);
       }
     });
@@ -60,7 +77,7 @@ searchForBook = function(title) {
 
 searchArrayItemByID = function(item, array) {
   for (let i = 0 ; i < array.length ; i++) {
-    if (array[i].id === item.id) {
+    if (array[i]._id === item._id) {
       return array[i];
     }
   }
@@ -99,4 +116,23 @@ checkLogin = function(context) {
 
 nullifyAll = function() {
   cleanupBookModal();
+}
+
+compareBookObjects = function(book1, book2) {
+  let volume1 = book1.volumeInfo;
+  let volume2 = book2.volumeInfo;
+
+  if (volume1.title != volume2.title || volume1.authors.length != volume2.authors.length) {
+    return false;
+  } else {
+    let authors1 = volume1.authors;
+    let authors2 = volume2.authors;
+
+    for (let i = 0 ; i < authors1.length ; i++) {
+      if (authors1[i] != authors2[i]) {
+        return false;
+      }
+    }
+  }
+  return true;
 }

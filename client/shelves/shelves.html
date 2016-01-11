@@ -37,24 +37,15 @@
           </div>
           <div class="col s9">
             <div class="row">
-              <label for="newBookTitle">Title</label>
+              <label>Search</label>
             </div>
             <div class="row input-field">
-              <a class="clean prefix">
+              <a id="searchBook" class="clean prefix">
                 <i class="material-icons">search</i>
               </a>
-              <input id="newBookTitle" name="title" type="text" class="validate active"  tabindex="1">
+              <input id="searchBooksInput" name="title" type="text" class="validate active"  tabindex="1">
             </div>
             {{> SearchResults}}
-            <div class="row">
-              <label for="author">Author</label>
-            </div>
-            <div class="row input-field">
-              <a class="clean prefix">
-                <i class="material-icons">search</i>
-              </a>
-              <input id="newBookAuthor" name="author" type="text" class="validate"  tabindex="2">
-            </div>
           </div>
         </div>
         <div class="row">
@@ -142,23 +133,9 @@
             <i class="x-small material-icons">close</i>
           </a>
         </li>
-        <li>
-          <a class="clean delete black-text">
-            <i class="x-small material-icons">delete</i>
-          </a>
-        </li>
-        <li>
-          <a class="clean edit black-text">
-            <i class="x-small material-icons">edit</i>
-          </a>
-        </li>
       </ul>
-
-
       <div class="row">
         <img class="bookCover" src={{book.volumeInfo.imageLinks.smallThumbnail}} height="100">
-      </div>
-      <div class="row">
         <label class="white-text">{{book.volumeInfo.title}}</label>
       </div>
     </div>

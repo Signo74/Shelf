@@ -10,8 +10,7 @@
         <input id="namePrefix" name="namePrefix" type="text">
       </div>
       <div class="row">
-        <label>Shelfs:</label>
-        <select id="shelvesSelect" name="shelves" class="shelvesSelect browser-default" tabindex="4">
+        <select id="shelvesSelect" name="shelves" class="shelvesSelect browser-default col s9" tabindex="4">
           <option value="" disabled selected>Select shelf</option>
           {{#if Template.subscriptionsReady}}
             {{#each shelves}}
@@ -19,6 +18,7 @@
             {{/each}}
           {{/if}}
         </select>
+        <button id="selectAllShelves" class="btn teal">SelectAll</button>
       </div>
       <div class="row">
         {{#each selectedShelves}}
@@ -26,6 +26,12 @@
         {{/each}}
       </div>
       <button type="submit" class="btn teal">Execute</button>
+      <div class="row">
+        <label>Book IDs in Shelfs</label>
+        <button id="findBook" class="btn teal">Find 1</button>
+        <button id="findShelfBooks" class="btn teal">Find Shelf</button>
+        <button id="findReaderBooks" class="btn teal">Find all for user</button>
+      </div>
     </form>
   </div>
 </template>

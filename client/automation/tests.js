@@ -1,4 +1,5 @@
-let currentTab = new ReactiveVar("BookTests")
+let currentTab = new ReactiveVar("BookTests");
+
 Template.Tests.helpers({
   testTab: function() {
     return currentTab.get();
@@ -6,7 +7,8 @@ Template.Tests.helpers({
 });
 
 Template.Tests.events({
-  "click #foo": function(event, template){
-
+  'click a.test': function(event) {
+    event.preventDefault();
+    currentTab.set($(event.target).data('tab'));
   }
 });

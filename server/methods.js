@@ -20,37 +20,83 @@
           updatedBy: Meteor.user()._id
         }})
       },
+      getAllShelves: function() {
+        return Shelves.find().fetch();
+      },
       // Book related methods
       addBook: function(book, shelves) {
         let date = new Date();
         let dateStr = date.toDateString();
 
-        Books.insert({
+        return Books.insert({
           book: book,
-          shelves: shelves,
           addedOn: date,
-          addedOnPretty: dateStr, 
+          addedOnPretty: dateStr,
           contributor: Meteor.user()._id
         })
       },
       deleteBook: function(id) {
         Books.remove({_id:id})
       },
+      deleteAllBooks: function() {
+        Books.remove({});
+        Shelves.update({}, {$unset: {'books':1}});
+      },
+      addBookToShelves: function(id, shelves) {
+        console.log(shelves);
+        let q =  [];
+        for (let i = 0 ; i < shelves.length ; i++) {
+          if (shelves[i].books) {
+            for (let j = 0 ; j < shelves[i].books.length ; j++) {
+              console.log(shelves[i]);
+              if (shelves[i].books[j].indexOf(id) === -1) {
+                let param = {
+                  _id: shelves[i]._id
+                }
+                q.push(param);
+              }
+            }
+          } else {
+            let param = {
+              _id: shelves[i]._id
+            }
+            q.push(param);
+          }
+        }
+
+        Shelves.update({$or:q}, {$addToSet: {books: {'_id': id}}});
+      },
       removeBookFromShelf: function(bookId, shelfID) {
-        Books.update({_id:bookId},
-                     {$pull : { "shelves" : {"id": shelfID} }});
+        Shelves.update({_id:shelfID},
+                     {$pull : { "books" : {"_id": bookId} }});
       },
       quickUpdateBook: function(id, title, author, description, shelves) {
         Books.update({_id:id},{$set :{
           title: title,
           author: author,
           desc: description,
-          shelves: shelves,
           addedOn: new Date(),
           owner: Meteor.user()._id,
           updateOn: new Date(),
           updateBy: Meteor.user()._id
         }})
+      },
+      findBook: function(bookID) {
+        let book = Books.find({'book.id':bookID}).fetch()[0];
+        return book;
+      },
+      getBooksFromDB: function(query) {
+        let books = Books.find({$or:[{'book.volumeInfo.title': {$regex : query, $options: '/^&/i'}}, {'book.volumeInfo.authors': {$regex : query, $options: '/^&/i'}}]}).fetch();
+          // {'book.volumeInfo.authors': {$in: [query]}}
+        return books;
+      },
+      checkIfUserHasBook: function(book, shelves) {
+        // TODO
+        for (let i = 0 ; i < shelves.length ; i++) {
+          if (false) {
+            throw new Meteor.Error(500, 'Internal server Error', 'This book already exists.');
+          }
+        }
       },
       bookSearch: function(searchTerm) {
         this.unblock();
@@ -80,6 +126,25 @@
           console.log(ex);
           return `Could not retrieve search results for title: ${searchTerm}`;
         }
+      },
+      addReview: function(score, bookId, title, content) {
+        let date = new Date();
+        let dateStr = date.toDateString()
+        console.log(score);
+        console.log(bookId);
+        console.log(title);
+        console.log(content);
+        if ((score > 0 && score < 6) && bookId && title && content) {
+          Reviews.insert({
+            book: bookId,
+            title: title,
+            score: score,
+            content: content,
+            author: Meteor.user()._id,
+            addedOn: date,
+            addedOnString: dateStr
+          })
+        }
       }
-  });
+    });
 });

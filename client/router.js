@@ -38,7 +38,8 @@ FlowRouter.route('/tests', {
     if(user.profile && user.profile.toLowerCase() === 'administrator') {
       BlazeLayout.render('main', {content: 'Tests'});
     } else {
-      BlazeLayout.render('main', {content: 'NotAuthorised'});
+      BlazeLayout.render('main', {content: 'Tests'});
+      // BlazeLayout.render('main', {content: 'NotAuthorised'});
     }
   },
   triggersExit: [nullifyAll]

@@ -1,11 +1,18 @@
 Template.Reviews.helpers({
   reviews: function() {
-    return [1,2,3,4,5];
+    return [];
   }
 });
 
 Template.Reviews.events({
-  "submit #addReview": function(event, template){
+  'submit #addReview': function(event, template){
     event.preventDefault();
+  },
+  'click a.rating': function(event) {
+    let score = 1;
+    let target = $(event.target).closest('a');
+
+    score = 5 - target.nextAll().length;
+    Meteor.call('addReview');
   }
 });
