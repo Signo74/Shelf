@@ -15,6 +15,14 @@
                   </h5>
                 </div>
                 <div class="row">
+                  {{#each bookScore}}
+                    <a href="#" class="rating"><i class="material-icons">{{this}}</i></a>
+                  {{/each}}
+                </div>
+                <span class="row">
+                  <label class="title"><strong>{{score}}</strong> ({{reviews}}) reviews</label>
+                </span>
+                <div class="row">
                   {{#each book.volumeInfo.authors}}
                     <h6 class="author">
                       {{this}}

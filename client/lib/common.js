@@ -108,6 +108,7 @@ cleanupBookModal = function() {
 
 
 checkLogin = function(context) {
+  Shelves.find().fetch()
   // context is the output of `FlowRouter.current()`
   if (!Meteor.users.find({}).fetch().length > 0) {
     FlowRouter.go('/');

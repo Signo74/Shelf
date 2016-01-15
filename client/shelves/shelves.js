@@ -248,8 +248,13 @@ Template.CommonDialog.events({
 Template.ShelvesList.onCreated(function() {
   let self = this;
   self.autorun(function() {
-    self.subscribe('shelves');
-    self.subscribe('search_params');
+    if (true) {
+        self.subscribe('books');
+        self.subscribe('shelves');
+        self.subscribe('search_params');
+    } else {
+
+    }
   })
 });
 

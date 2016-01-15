@@ -21,7 +21,7 @@
         <button id="submitShelf" class="btn waves-effect waves-light" type="submit" name="action"  tabindex="3">Submit
           <i class="material-icons right">send</i>
         </button>
-        <button id="cancel" class="btn waves-effect waves-light close" name="action" tabindex="5">Cancel
+        <button id="cancel" class="btn close" name="action" tabindex="5">Cancel
         </button>
       </div>
     </form>
@@ -136,6 +136,8 @@
       </ul>
       <div class="row">
         <img class="bookCover" src={{book.volumeInfo.imageLinks.smallThumbnail}} height="100">
+      </div>
+      <div class="row">
         <label class="white-text">{{book.volumeInfo.title}}</label>
       </div>
     </div>

@@ -1,34 +1,73 @@
 <template name="Reviews">
-  <form id="addReview" class="row">
-    <div class="col s12">
-      <span class="row valign-wrapper">
-        <label>Score</label>
-        <a href="#" class="rating"><i class="material-icons">star_border</i></a>
-        <a href="#" class="rating"><i class="material-icons">star_border</i></a>
-        <a href="#" class="rating"><i class="material-icons">star_border</i></a>
-        <a href="#" class="rating"><i class="material-icons">star_border</i></a>
-        <a href="#" class="rating"><i class="material-icons">star_border</i></a>
-      </span>
-      <div class="row">
-        <label>Title</label>
-        <input id="newReviewTitle" name="title" type="text" />
+  {{#if hasReview}}
+    <form id="addReview" class="row">
+      <div class="col s12">
+        <span class="row valign-wrapper">
+          <label>Score</label>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+        </span>
+        <div class="row">
+          <label>Title</label>
+          <input id="newReviewTitle" name="title" type="text" />
+        </div>
+        <div class="row">
+          <label>Content</label>
+          <textarea id="newReviewContent" name="content">
+          </textarea>
+        </div>
       </div>
-      <div class="row">
-        <label>Content</label>
-        <textarea id="newReviewContent" name="content">
-        </textarea>
-      </div>
-    </div>
-    <button class="btn teal" type="submit">Submit</button>
-  </form>
+      <button class="btn teal" type="submit">Submit</button>
+    </form>
+  {{/if}}
+  
   {{# each reviews}}
     {{> Review}}
   {{/each}}
+
+  <div id="reviewUpdate" class="modal">
+    <form id="updateReview" class="row">
+      <div class="col s12">
+        <span class="row valign-wrapper">
+          <label>Score</label>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+          <a class="rating"><i class="material-icons">star_border</i></a>
+        </span>
+        <div class="row">
+          <label>Title</label>
+          <input id="updateTitle" name="title" type="text" value=""/>
+        </div>
+        <div class="row">
+          <label>Content</label>
+          <textarea id="updateContent" name="content">
+          </textarea>
+        </div>
+      </div>
+      <button class="btn teal" type="submit">Update</button>
+      <button id="cancel" class="btn waves-effect waves-light close" name="action">Cancel</button>
+    </form>
+  </div>
 </template>
 
 <template name="Review">
   <div class="row">
     <div class="col s12 card-panel">
+      {{#if isRecent}}
+        <div class="footer clean">
+          <a class="edit clean teal-text">
+            edit
+          </a>
+          <a class="remove clean teal-text">
+            delete
+          </a>
+        </div>
+      {{/if}}
       <span class="valign-wrapper">
         {{#each reviewScore}}
           <i class="small material-icons">star</i>

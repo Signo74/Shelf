@@ -9,6 +9,30 @@ Template.Book.helpers({
   },
   socialTab: function() {
     return currentTab.get();
+  },
+  shelves: function() {
+    return Shelves.find({book:FlowRouter.getParam('id')});
+  },
+  reviews: function() {
+    return Reviews.find({book:FlowRouter.getParam('id')}).count();
+  },
+  bookScore: function() {
+    let starsArr = [];
+    let i = 1;
+    for ( ; i <= this.score ; i++) {
+      starsArr.push('star');
+    }
+
+    if (i - this.score < 1 && i - this.score > 0) {
+      starsArr.push('star_half');
+      i++;
+    }
+
+    for (; i <= 5 ; i++) {
+      starsArr.push('star_border');
+    }
+
+    return starsArr;
   }
 });
 
@@ -28,12 +52,7 @@ Template.Book.onCreated(function() {
   self.autorun(function(){
     let bookID = FlowRouter.getParam('id');
     self.subscribe('book', bookID);
+    self.subscribe('reviews', bookID);
+    self.subscribe('bookShelves', bookID);
   });
 })
-
-Template.Book.onRendered(function() {
-  $('input.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 20 // Creates a dropdown of 15 years to control year
-  });
-});

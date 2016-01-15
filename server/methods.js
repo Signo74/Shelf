@@ -30,6 +30,8 @@
 
         return Books.insert({
           book: book,
+          score: 0,
+          reviewsCount: 0,
           addedOn: date,
           addedOnPretty: dateStr,
           contributor: Meteor.user()._id
@@ -43,12 +45,10 @@
         Shelves.update({}, {$unset: {'books':1}});
       },
       addBookToShelves: function(id, shelves) {
-        console.log(shelves);
         let q =  [];
         for (let i = 0 ; i < shelves.length ; i++) {
           if (shelves[i].books) {
             for (let j = 0 ; j < shelves[i].books.length ; j++) {
-              console.log(shelves[i]);
               if (shelves[i].books[j].indexOf(id) === -1) {
                 let param = {
                   _id: shelves[i]._id
@@ -90,14 +90,6 @@
           // {'book.volumeInfo.authors': {$in: [query]}}
         return books;
       },
-      checkIfUserHasBook: function(book, shelves) {
-        // TODO
-        for (let i = 0 ; i < shelves.length ; i++) {
-          if (false) {
-            throw new Meteor.Error(500, 'Internal server Error', 'This book already exists.');
-          }
-        }
-      },
       bookSearch: function(searchTerm) {
         this.unblock();
         let searchURL = 'https://www.googleapis.com/books/v1/volumes?';
@@ -127,7 +119,7 @@
           return `Could not retrieve search results for title: ${searchTerm}`;
         }
       },
-      addReview: function(bookId, score, title, content) {
+      addReview: function(bookId, score, title, content, totalScore, totalReviews) {
         let date = new Date();
         let dateStr = date.toDateString()
 
@@ -149,8 +141,39 @@
             authorId: Meteor.user()._id,
             addedOn: date,
             addedOnPretty: dateStr
+          });
+
+          totalReviews++;
+
+          if (totalReviews > 1) {
+            score -= totalScore;
+            totalScore += score / totalReviews;
+          } else {
+            totalScore = score;
+          }
+
+          Books.update({_id:bookId},{
+            $set:{
+              score: totalScore,
+              reviewsCount: totalReviews
+            }
           })
         }
+      },
+      removeReview: function(reviewId, bookId, score) {
+        Reviews.remove({_id:reviewId, authorId: Meteor.user()._id});
+        Books.update({_id: bookId}, {$set: {score: score}});
+      },
+      updateReview: function(bookId, reviewId, score, title, content, scoreDiff, totalScore, totalReviews) {
+        let updatedScore;
+        if (totalReviews > 1) {
+          updatedScore = totalScore +  scoreDiff / totalReviews;
+        } else {
+          updatedScore = score;
+        }
+
+        Reviews.update({_id:reviewId, authorId: Meteor.user()._id}, {$set: {score:score, title: title, content:content}})
+        Books.update({_id: bookId}, {$set: {score: updatedScore}});
       }
     });
 });

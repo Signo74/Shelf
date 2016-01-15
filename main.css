@@ -1,21 +1,6 @@
 /* CSS declarations go here */
-.fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
-
-.deleteCard {
-  position: absolute;
-  right: 0px;
-  top: 10px;
-}
-
-.deleteCard-sm {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  padding-right:5px;
+.modal {
+  max-height: 90%;
 }
 
 .card-panel {
@@ -29,6 +14,40 @@
   margin-bottom: 5px;
 }
 
+i.x-small {
+  font-size: 1.5rem;
+}
+
+.title {
+  font-size: 1.2rem;
+  color: #000;
+}
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.deleteCard {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}
+
+.deleteCard-sm {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding-right:5px;
+}
+
+.footer {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+
 .vertical-scroll {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -40,21 +59,18 @@
   padding: 0;
 }
 
-i.x-small {
-  font-size: 1.5rem;
-}
-a {
-  cursor: pointer;
-}
-
 .action-available {
   cursor: pointer;
 }
 
-.modal {
-  max-height: 90%;
+.main {
+  margin-top:5px;
 }
 
 .hidden {
   display: none;
+}
+
+a {
+  cursor: pointer;
 }
