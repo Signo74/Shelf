@@ -1,5 +1,6 @@
 shelfTags = new ReactiveArray();
 searchedBooks = new ReactiveArray();
+loading = new ReactiveVar('');
 
 $(function() {
   $('body').on('change', '#shelvesSelect', function(event) {
@@ -45,6 +46,8 @@ Template.ShelfTag.events({
 
 searchForBook = function(query) {
   if (query != '' && query != undefined) {
+    // Start the Spinner
+    loading.set('Spinner');
     // Reset the previous search results
     searchedBooks.splice(0, searchedBooks.length);
 
@@ -58,8 +61,11 @@ searchForBook = function(query) {
       for (let i = 0 ; i < result.length ; i++) {
         searchedBooks.push(result[i].book);
       }
-      console.log(`Number of books found in DB: ${searchedBooks.length}`);
 
+      // Stop the Spinner
+      if (searchedBooks.length > 0) {
+        loading.set('SearchResults');
+      }
 
       Meteor.call('bookSearch', query, function(error, result) {
         if (error) {
@@ -79,6 +85,13 @@ searchForBook = function(query) {
             }
           }
           searchedBooks.push(books.items[i]);
+        }
+
+        // Stop the Spinner
+        if (searchedBooks.length > 0) {
+          loading.set('SearchResults');
+        } else {
+          loading.set('NoResultsFound');
         }
       });
     });

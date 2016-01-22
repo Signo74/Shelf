@@ -5,6 +5,9 @@ let selectedBook;
 Template.ShelvesList.helpers({
   shelves: function() {
     return Shelves.find().fetch();
+  },
+  results: function() {
+    return loading.get();
   }
 });
 
@@ -267,6 +270,9 @@ Template.Shelf.onCreated(function() {
 
 
 cleanNewBookModal = function() {
+  // Reset the Spinner.
+  loading.set('');
+  // Clean up the Modal.
   $('#searchBooksInput').val('');
   $('#newBookDescription').text('');
   $('#shelvesSelect').val('');
