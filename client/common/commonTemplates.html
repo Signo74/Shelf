@@ -23,13 +23,18 @@
           <div class="col s2">
             <img src={{volumeInfo.imageLinks.smallThumbnail}} heigh="80" width="40">
           </div>
-          <div class="col s5">
-            {{volumeInfo.title}}
+          <div class="col s4">
+            <label class="table-label">{{volumeInfo.title}}</label>
           </div>
           <div class="col s5">
             {{# each volumeInfo.authors}}
-              {{this}},
+              <label class="table-label">{{this}}</label><br>
             {{/ each}}
+          </div>
+          <div class="col s1">
+            {{#if isMature}}
+              <i class="material-icons">report_problem</i>
+            {{/if}}
           </div>
         </div>
       {{/each}}

@@ -15,12 +15,12 @@
                   </h5>
                 </div>
                 <div class="row">
-                  {{#each bookScore}}
+                  {{#each bookStars}}
                     <a href="#" class="rating"><i class="material-icons">{{this}}</i></a>
                   {{/each}}
                 </div>
                 <span class="row">
-                  <label class="title"><strong>{{score}}</strong> ({{reviews}}) reviews</label>
+                  <label class="title"><strong>{{bookScore}}</strong> ({{reviews}}) reviews</label>
                 </span>
                 <div class="row">
                   {{#each book.volumeInfo.authors}}
@@ -42,14 +42,14 @@
                 <div class="row">
                   <label>Shelves:</label>
                   {{#each shelves}}
-                    <label>{{this.title}}</label>
+                    <label class="chip">{{this.title}}</label>
                   {{/each}}
                 </div>
               </div>
             </div>
             <div class="row">
               <label>Description</label>
-              <p id="description">
+              <p id="description" class="vertical-scroll">
                 {{book.volumeInfo.description}}
               </p>
             </div>
@@ -74,7 +74,9 @@
             <div class="col s12">
               <ul class="tabs">
                 <li class="tab col s3"><a data-tab="Reviews" class="social acitve" href="#reviews">Reviews</a></li>
-                <li class="tab col s3"><a data-tab="Discussions" class="social" href="#questions">Discussions</a></li>
+                <!-- <li class="tab col s3"><a data-tab="Discussions" class="social" href="#questions">Discussions</a></li> -->
+                <!-- <li class="tab col s3"><a data-tab="Friends" class="social" href="#questions">Friends</a></li> -->
+                <!-- <li class="tab col s3"><a data-tab="Similiar" class="social" href="#questions">Similiar</a></li> -->
               </ul>
             </div>
           </div>

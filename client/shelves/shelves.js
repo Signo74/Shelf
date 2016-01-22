@@ -9,9 +9,12 @@ Template.ShelvesList.helpers({
 });
 
 Template.ShelvesList.events({
-  'change #searchBooksInput': function(event) {
-    let title = event.target.value;
-    searchForBook(title);
+  'keypress #searchBooksInput': function(event) {
+    if (event.keyCode === 13){
+      let title = event.target.value;
+      searchForBook(title);
+      return false;
+    }
   },
   'click #searchBook': function(event) {
     let query = $(event.target).closest('a').next().val();
@@ -20,41 +23,48 @@ Template.ShelvesList.events({
   'click div.searchEntry': function() {
     // Assign the selected book
     selectedBook = this;
-
+    console.log(this);
     let book = this.volumeInfo;
-    let authorsCount = book.authors.length;
+    let authorsCount;
     let authors = '';
 
-    for (let i = 0 ; i < authorsCount ; i++) {
-      if (i === (authorsCount - 1)) {
-        authors += book.authors[i];
-      } else {
-        authors += book.authors[i] + ', ';
+    if (book.authors != undefined) {
+      authorsCount = book.authors.length;
+      for (let i = 0 ; i < authorsCount ; i++) {
+        if (i === (authorsCount - 1)) {
+          authors += book.authors[i];
+        } else {
+          authors += book.authors[i] + ', ';
+        }
       }
     }
 
-    $('#newBookDescription').text(book.description);
+    if (book.description) {
+      $('#newBookDescription').text(book.description);
+    } else {
+      $('#newBookDescription').text('');
+    }
     $('#tempBookIcon').addClass('hidden');
     $('#tempBookIcon').removeClass('material-icons');
     $('#newBookThumbnail').prop('src', book.imageLinks.thumbnail);
     $('#submitBook').prop('disabled', false);
   },
-  'submit .newShelf': function(event) {
+  'click #submitShelf': function(event) {
     event.preventDefault();
+    event.stopPropagation();
+
     let title = $('#newShelfTitle').val();
     let description = $('#newShelfDescription').val();
 
     submitCallback(title, description);
 
-    $('#newShelfTitle').val('');
-    $('#newShelfDescription').val('');
-    $('#newShelf').closeModal();
-
     submitCallback = function() {
       $('#newBook').closeModal();
     }
+    cleanNewShelfModal();
+    $('#newShelf').closeModal();
   },
-  'submit .newBook': function(event) {
+  'click #submitBook': function(event) {
     // TODO check the Mongo for a book entry first to avoid duplicates.
     event.preventDefault();
     let shelves = shelfTags.array();
@@ -63,44 +73,33 @@ Template.ShelvesList.events({
       if(error){
         logger.error("error", error);
       }
-      console.log(result);
       if(!result){
-        console.log(`Add book: ${selectedBook}`);
         Meteor.call('addBook', selectedBook, shelves, function(error, result) {
           Meteor.call("addBookToShelves",result, shelves);
         });
       } else {
-        console.log(`Book ${result.book.volumeInfo.title} found.`)
         Meteor.call("addBookToShelves", result._id, shelves);
       }
     });
-
-    // Clean up the form parameters
-    $('#searchBooksInput').val('');
-    $('#newBookDescription').val('');
-    $('#shelvesSelect').val('');
-    $('#newBookThumbnail').prop('src', '');
-
-    shelfTags.splice(0, shelfTags.length);
-    searchedBooks.splice(0, searchedBooks.length);
 
     $('#newBook').closeModal();
 
     submitCallback = function() {
       $('#newBook').closeModal();
     }
+    cleanNewBookModal();
   },
-  'click .close': function(event) {
+  'click button.close': function(event) {
     event.preventDefault();
     let button = event.target;
-    let form = $(event.target).closest('form');
+    let form = $(event.target).closest('div.modal');
 
     // Clean up the form.
     form.find('input').each(function() {
       $(this).val('');
     })
 
-    form.find('textarea').val('');
+    form.find('p').text('');
 
     $(button).closest('div.modal').closeModal();
 
@@ -141,6 +140,7 @@ Template.Shelf.events({
       shelfTags.push(tag);
     }
 
+    cleanNewBookModal();
     $('#newBook').openModal();
   },
   'click .edit':function() {
@@ -159,7 +159,9 @@ Template.Shelf.events({
 Template.Shelf.helpers({
   books: function() {
     let bookIDs = this.books;
-    return Books.find({$or:bookIDs});
+    if (bookIDs != undefined) {
+      return Books.find({$or:bookIDs});
+    }
   }
 });
 
@@ -167,10 +169,11 @@ Template.AddShelf.events({
   'click .addShelf': function(event) {
     event.preventDefault();
 
-        submitCallback = function(title, description) {
-          Meteor.call('addShelf', title, description);
-        }
+    submitCallback = function(title, description) {
+      Meteor.call('addShelf', title, description);
+    }
 
+    cleanNewShelfModal();
     $('#newShelf').openModal();
   },
   'click .addBook': function() {
@@ -187,6 +190,9 @@ Template.AddShelf.events({
         }
       });
     }
+
+    cleanNewBookModal();
+
     $('#newBook').openModal();
   }
 });
@@ -211,7 +217,7 @@ Template.BookThumbnail.events({
     let bookID = this._id;
 
     $('#searchBooksInput').val(this.title);
-    $('#newBookDescription').val(this.description);
+    $('#newBookDescription').text(this.description);
 
     // Empty the tags array first
     cleanupBookModal();
@@ -248,13 +254,9 @@ Template.CommonDialog.events({
 Template.ShelvesList.onCreated(function() {
   let self = this;
   self.autorun(function() {
-    if (true) {
-        self.subscribe('books');
-        self.subscribe('shelves');
-        self.subscribe('search_params');
-    } else {
-
-    }
+    self.subscribe('books');
+    self.subscribe('shelves');
+    self.subscribe('search_params');
   })
 });
 
@@ -262,3 +264,20 @@ Template.Shelf.onCreated(function() {
   let self = this;
   self.subscribe('books');
 });
+
+
+cleanNewBookModal = function() {
+  $('#searchBooksInput').val('');
+  $('#newBookDescription').text('');
+  $('#shelvesSelect').val('');
+  $('#newBookThumbnail').prop('src', '');
+  $('#submitBook').attr('disabled', true);
+
+  shelfTags.splice(0, shelfTags.length);
+  searchedBooks.splice(0, searchedBooks.length);
+}
+
+cleanNewShelfModal = function() {
+  $('#newShelfTitle').val('');
+  $('#newShelfDescription').val('');
+}

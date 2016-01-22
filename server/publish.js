@@ -6,10 +6,6 @@ Meteor.publish('shelves', function() {
   return Shelves.find({owner: this.userId});
 });
 
-Meteor.publish('bookShelves', function(bookId) {
-  return Shelves.find({owner:this.userId, book:bookId});
-});
-
 Meteor.publish('books', function() {
   return Books.find();
 })

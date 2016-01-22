@@ -11,12 +11,14 @@ Template.Book.helpers({
     return currentTab.get();
   },
   shelves: function() {
-    return Shelves.find({book:FlowRouter.getParam('id')});
+    let bookId = FlowRouter.getParam('id');
+
+    return Shelves.find({books:{_id:bookId}},{title:1});
   },
   reviews: function() {
     return Reviews.find({book:FlowRouter.getParam('id')}).count();
   },
-  bookScore: function() {
+  bookStars: function() {
     let starsArr = [];
     let i = 1;
     for ( ; i <= this.score ; i++) {
@@ -33,6 +35,9 @@ Template.Book.helpers({
     }
 
     return starsArr;
+  },
+  bookScore: function() {
+    return this.score.toFixed(2);
   }
 });
 
@@ -53,6 +58,6 @@ Template.Book.onCreated(function() {
     let bookID = FlowRouter.getParam('id');
     self.subscribe('book', bookID);
     self.subscribe('reviews', bookID);
-    self.subscribe('bookShelves', bookID);
+    self.subscribe('shelves');
   });
 })

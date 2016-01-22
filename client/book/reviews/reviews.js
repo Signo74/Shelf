@@ -4,9 +4,11 @@ Template.Reviews.helpers({
     return Reviews.find();
   },
   hasReview: function() {
-    let reviewCount = Reviews.find({authorId:Meteor.user()._id, book: FlowRouter.getParam('id')}).count();
-    let result = reviewCount <= 0;
-    return result;
+    if (Meteor.user()) {
+      let reviewCount = Reviews.find({authorId:Meteor.user()._id, book: FlowRouter.getParam('id')}).count();
+      let result = reviewCount <= 0;
+      return result;
+    }
   }
 });
 
@@ -15,7 +17,7 @@ Template.Reviews.events({
     event.preventDefault();
     let title = event.target.title.value;
     let content = event.target.content.value;
-    let bookId = FlowRouter.getParam('id');
+    let bookId = this._id;
     let score = 0;
     let totalScore = this.score;
     let totalReviews = this.reviewsCount;
@@ -54,7 +56,6 @@ Template.Reviews.events({
     })
     if (score > 5) score = 5;
     scoreDiff = score - Session.get('currentScore');
-    console.log(score);
 
     Meteor.call('updateReview',bookId, reviewId, score, title, content, scoreDiff, totalScore, totalReviews);
 
@@ -95,16 +96,9 @@ Template.Review.helpers({
 
     return stars;
   },
-  isRecent: function() {
+  isOwner: function() {
     if (Meteor.user() && this.authorId === Meteor.user()._id) {
-      let today = new Date();
-      // One day in miliseconds
-      let aDay = 2*12*60*60*1000;
-
-      if (today - this.addedOn < aDay) {
-        return true;
-      }
-      return false;
+      return true;
     }
     return false;
   }
@@ -117,13 +111,7 @@ Template.Review.events({
     let bookScore = Template.parentData().score;
     let updatedScore = this.score;
 
-    if (totalReviews > 1) {
-      updatedScore = bookScore*2 - updatedScore;
-    } else {
-      updatedScore = 0;
-    }
-
-    Meteor.call('removeReview', this._id, bookId, updatedScore);
+    Meteor.call('removeReview', this._id, bookId, totalReviews, updatedScore, bookScore);
   },
   'click a.edit': function() {
     let score = this.score;

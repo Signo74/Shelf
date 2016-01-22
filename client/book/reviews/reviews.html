@@ -23,7 +23,7 @@
       <button class="btn teal" type="submit">Submit</button>
     </form>
   {{/if}}
-  
+
   {{# each reviews}}
     {{> Review}}
   {{/each}}
@@ -58,7 +58,7 @@
 <template name="Review">
   <div class="row">
     <div class="col s12 card-panel">
-      {{#if isRecent}}
+      {{#if isOwner}}
         <div class="footer clean">
           <a class="edit clean teal-text">
             edit

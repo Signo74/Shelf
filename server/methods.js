@@ -46,6 +46,7 @@
       },
       addBookToShelves: function(id, shelves) {
         let q =  [];
+
         for (let i = 0 ; i < shelves.length ; i++) {
           if (shelves[i].books) {
             for (let j = 0 ; j < shelves[i].books.length ; j++) {
@@ -64,7 +65,7 @@
           }
         }
 
-        Shelves.update({$or:q}, {$addToSet: {books: {'_id': id}}});
+        Shelves.update({$or:q}, {$addToSet: {books: {'_id': id}}}, {multi:true});
       },
       removeBookFromShelf: function(bookId, shelfID) {
         Shelves.update({_id:shelfID},
@@ -87,7 +88,6 @@
       },
       getBooksFromDB: function(query) {
         let books = Books.find({$or:[{'book.volumeInfo.title': {$regex : query, $options: '/^&/i'}}, {'book.volumeInfo.authors': {$regex : query, $options: '/^&/i'}}]}).fetch();
-          // {'book.volumeInfo.authors': {$in: [query]}}
         return books;
       },
       bookSearch: function(searchTerm) {
@@ -160,9 +160,16 @@
           })
         }
       },
-      removeReview: function(reviewId, bookId, score) {
+      removeReview: function(reviewId, bookId, totalReviews, updatedScore, bookScore) {
+        if (totalReviews > 1) {
+          updatedScore = bookScore*totalReviews - updatedScore;
+          updatedScore /= --totalReviews;
+        } else {
+          updatedScore = 0;
+        }
+
         Reviews.remove({_id:reviewId, authorId: Meteor.user()._id});
-        Books.update({_id: bookId}, {$set: {score: score}});
+        Books.update({_id: bookId}, {$set: {score: updatedScore, reviewsCount:totalReviews}});
       },
       updateReview: function(bookId, reviewId, score, title, content, scoreDiff, totalScore, totalReviews) {
         let updatedScore;

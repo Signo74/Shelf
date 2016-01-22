@@ -26,6 +26,14 @@ Template.registerHelper("searchResults", function(){
   return searchedBooks.list();
 });
 
+Template.registerHelper("isMature", function(){
+  if (this.volumeInfo.matureRating === 'MATURE') {
+    return true;
+  }
+
+  return false;
+});
+
 Template.ShelfTag.events({
   'click a.remove': function(event) {
     event.preventDefault();
@@ -36,7 +44,6 @@ Template.ShelfTag.events({
 });
 
 searchForBook = function(query) {
-  // TODO check Mongo for entries first so that you save an extra GAPI call.
   if (query != '' && query != undefined) {
     // Reset the previous search results
     searchedBooks.splice(0, searchedBooks.length);
@@ -51,26 +58,29 @@ searchForBook = function(query) {
       for (let i = 0 ; i < result.length ; i++) {
         searchedBooks.push(result[i].book);
       }
-    });
-    Meteor.call('bookSearch', query, function(error, result) {
-      if (error) {
-        // TODO show message to user
-        console.log(error);
-        return false;
-      }
-      let books = JSON.parse(result.content);
-      let count = books.items.length;
-      let alreadyAddedCount = searchedBooks.length;
+      console.log(`Number of books found in DB: ${searchedBooks.length}`);
 
-searcheResults:
-      for (let i = 0 ; i < count ; i++) {
-        for (let j = 0 ; j < alreadyAddedCount ; j++) {
-          if (compareBookObjects(searchedBooks[j], books.items[i])) {
-            continue searcheResults;
-          }
+
+      Meteor.call('bookSearch', query, function(error, result) {
+        if (error) {
+          // TODO show message to user
+          console.log(error);
+          return false;
         }
-        searchedBooks.push(books.items[i]);
-      }
+        let books = JSON.parse(result.content);
+        let count = books.items.length;
+        let alreadyAddedCount = searchedBooks.length;
+
+  searcheResults:
+        for (let i = 0 ; i < count ; i++) {
+          for (let j = 0 ; j < alreadyAddedCount ; j++) {
+            if (compareBookObjects(searchedBooks[j], books.items[i])) {
+              continue searcheResults;
+            }
+          }
+          searchedBooks.push(books.items[i]);
+        }
+      });
     });
   }
 }
@@ -123,15 +133,24 @@ compareBookObjects = function(book1, book2) {
   let volume1 = book1.volumeInfo;
   let volume2 = book2.volumeInfo;
 
-  if (volume1.title != volume2.title || volume1.authors.length != volume2.authors.length) {
+  if (volume1.title != volume2.title) {
+    if (volume1.authors && volume2.authors) {
+      if (volume1.authors.length != volume2.authors.length) {
+        return false;
+      } else {
+        return true;
+      }
+    }
     return false;
   } else {
     let authors1 = volume1.authors;
     let authors2 = volume2.authors;
 
-    for (let i = 0 ; i < authors1.length ; i++) {
-      if (authors1[i] != authors2[i]) {
-        return false;
+    if (authors1 && authors2) {
+      for (let i = 0 ; i < authors1.length ; i++) {
+        if (authors1[i] != authors2[i]) {
+          return false;
+        }
       }
     }
   }
