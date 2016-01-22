@@ -166,6 +166,7 @@
           updatedScore /= --totalReviews;
         } else {
           updatedScore = 0;
+          totalReviews = 0;
         }
 
         Reviews.remove({_id:reviewId, authorId: Meteor.user()._id});
