@@ -72,16 +72,17 @@ Template.ShelvesList.events({
     event.preventDefault();
     let shelves = shelfTags.array();
 
-    Meteor.call("findBook", selectedBook.id, function(error, result){
+    Meteor.call('findBook', selectedBook.id, function(error, result){
       if(error){
         logger.error("error", error);
       }
+
       if(!result){
         Meteor.call('addBook', selectedBook, shelves, function(error, result) {
-          Meteor.call("addBookToShelves",result, shelves);
+          Meteor.call('addBookToShelves',result, shelves);
         });
       } else {
-        Meteor.call("addBookToShelves", result._id, shelves);
+        Meteor.call('addBookToShelves', result._id, shelves);
       }
     });
 
@@ -139,11 +140,9 @@ Template.Shelf.events({
       Meteor.call('addBook', title, author, description, shelves);
     }
 
-    if (!searchArrayItemByID(tag, shelfTags)) {
-      shelfTags.push(tag);
-    }
-
     cleanNewBookModal();
+    shelfTags.push(tag);
+
     $('#newBook').openModal();
   },
   'click .edit':function() {
