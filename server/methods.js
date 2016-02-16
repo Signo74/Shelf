@@ -182,6 +182,56 @@
 
         Reviews.update({_id:reviewId, authorId: Meteor.user()._id}, {$set: {score:score, title: title, content:content}})
         Books.update({_id: bookId}, {$set: {score: updatedScore}});
+      },
+      // User related methods
+      registerUser: function(username, email, password, confirmPass) {
+        let currentDate = new Date();
+        let dateString  = currentDate.toDateString();
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (!re.test(email)) {
+          throw new Meteor.Error(417, 'Error 417: Incorrect data', 'The email you provided is not correct.');
+        }
+
+        if (password != confirmPass) {
+            throw new Meteor.Error(417, 'Error 417: Incorrect data', 'The passwords you provided did not match.');
+        }
+
+        Accounts.createUser({
+            username: username,
+            email: email,
+            password: password,
+            createdOn: currentDate,
+            createdOnPretty: dateString
+        })
+
+        console.log(`${username} registered with ${email}`)
+        return true;
+      },
+      sendVerificaitonEmail: function(userId) {
+        Accounts.sendVerificationEmail(userId);
+      },
+      createBaseShelves: function(userId) {
+        Shelves.insert({
+          title: 'Reading',
+          desc: 'All the books you are currently in progress of reading.',
+          createdOn: new Date(),
+          owner: Meteor.user()._id
+        });
+
+        Shelves.insert({
+          title: 'Read',
+          desc: 'All the books you have read.',
+          createdOn: new Date(),
+          owner: Meteor.user()._id
+        });
+
+        Shelves.insert({
+          title: 'Whishlist',
+          desc: 'Books you would like to read.',
+          createdOn: new Date(),
+          owner: Meteor.user()._id
+        });
       }
     });
 });

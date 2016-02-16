@@ -31,6 +31,15 @@ FlowRouter.route('/book/:id', {
   triggersExit: [nullifyAll]
 });
 
+
+FlowRouter.route('/register', {
+  name: 'shelvesList',
+  action: function() {
+    BlazeLayout.render('main', {content: 'Register'});
+  },
+  triggersExit: [nullifyAll]
+});
+
 FlowRouter.route('/tests', {
   triggersEnter: [checkLogin],
   action: function() {

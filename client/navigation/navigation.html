@@ -8,7 +8,16 @@
         <ul class="right hide-on-med-and-down">
           <li><a href="/shelves">Shelves</a></li>
           <li><a href="/tests">Tests</a></li>
-          <li><a href="#">{{> loginButtons align="right"}}</a></li>
+          <li><a href="#">Login</a></li>
+          <li class="hidden">
+            <span>
+              username: <input type="text" name="username" value="">
+              password<input type="password" name="password" value="">
+              <button type="button" name="name" value="">Login</button>
+            </span>
+          </li>
+          <li>{{> loginButtons}}</li>
+          <li><a href="/register">Register</a></li>
         </ul>
         <ul class="side-nav" id="mobile-demo">
           <li><a href="/shelves">Shelves</a></li>
