@@ -8,16 +8,21 @@
         <ul class="right hide-on-med-and-down">
           <li><a href="/shelves">Shelves</a></li>
           <li><a href="/tests">Tests</a></li>
-          <li><a href="#">Login</a></li>
-          <li class="hidden">
-            <span>
-              username: <input type="text" name="username" value="">
-              password<input type="password" name="password" value="">
-              <button type="button" name="name" value="">Login</button>
-            </span>
+          <li><a id="login">Login</a></li>
+          <li class="hidden loginForm sm-margin">
+              <input id="loginUser" type="text" name="username" value="" placeholder="username">
           </li>
-          <li>{{> loginButtons}}</li>
-          <li><a href="/register">Register</a></li>
+          <li class="hidden loginForm sm-margin">
+            <input id="loginPass" type="password" name="password" value="" placeholder="password">
+          </li>
+          <li id="loginSubmit" class="hidden loginForm sm-margin">
+            <i class="tiny material-icons">arrow_forward</i>
+          </li>
+          <li id="loginClose" class="hidden loginForm sm-margin">
+            <i id="hideLoginForm" class="tiny material-icons">close</i>
+          </li>
+          <li><a id="registerUser" href="/register">Register</a></li>
+          <li><a id="logout">Logout</a></li>
         </ul>
         <ul class="side-nav" id="mobile-demo">
           <li><a href="/shelves">Shelves</a></li>

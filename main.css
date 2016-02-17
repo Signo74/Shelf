@@ -62,6 +62,9 @@ i.x-small {
   margin: 0;
   padding: 0;
 }
+.sm-margin {
+  margin:2px;
+}
 
 .action-available {
   cursor: pointer;
@@ -76,5 +79,9 @@ i.x-small {
 }
 
 a {
+  cursor: pointer;
+}
+
+i {
   cursor: pointer;
 }
