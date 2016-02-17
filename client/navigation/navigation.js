@@ -2,7 +2,6 @@ Accounts.ui.config({
   passwordSignupFields: 'USERNAME_AND_EMAIL'
 });
 
-
 Template.Navigation.helpers({
 });
 
@@ -28,7 +27,10 @@ Template.Navigation.events({
       $('#login').addClass('hidden');
       $('#registerUser').addClass('hidden');
       $('.loginForm').addClass('hidden');
+      $('#logout').removeClass('hidden');
       Meteor.logoutOtherClients();
+
+      FlowRouter.go('/shelves');
     });
   },
   "click #logout": function(event, template){
@@ -37,6 +39,8 @@ Template.Navigation.events({
     Meteor.logout(function() {
       $('#login').removeClass('hidden');
       $('#registerUser').removeClass('hidden');
+      $('#logout').addClass('hidden');
+      FlowRouter.go('/');
     });
   }
 });
