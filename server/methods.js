@@ -1,3 +1,9 @@
+/*
+ * Error codes:
+ * 440 - User has provided wrong type, quantity, or format of data.
+ * 441 - Target of the operation is incorrect. For example: wron shelf for drag and drop.
+ *
+ */
   Meteor.startup(function () {
     Meteor.methods({
       // Shelf related methods
@@ -46,17 +52,21 @@
       },
       addBookToShelves: function(id, shelves) {
         let q =  [];
+        console.log(`Book ID to add: ${id}`);
 
         for (let i = 0 ; i < shelves.length ; i++) {
-          if (shelves[i].books) {
+          if (shelves[i].books && shelves[i].books.length > 0) {
             for (let j = 0 ; j < shelves[i].books.length ; j++) {
-              if (shelves[i].books[j].indexOf(id) === -1) {
-                let param = {
-                  _id: shelves[i]._id
-                }
-                q.push(param);
+              if (shelves[i].books[j]._id === id) {
+                console.log('Boook is already present in this shelf.');
+                throw new Meteor.Error(441, 'Error 441: Incorrect target shelf', 'Boook is already added to this shelf.');
               }
             }
+
+            let param = {
+              _id: shelves[i]._id
+            }
+            q.push(param);
           } else {
             let param = {
               _id: shelves[i]._id
@@ -64,6 +74,7 @@
             q.push(param);
           }
         }
+        console.log(q);
 
         Shelves.update({$or:q}, {$addToSet: {books: {'_id': id}}}, {multi:true});
       },
@@ -190,11 +201,11 @@
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (!re.test(email)) {
-          throw new Meteor.Error(417, 'Error 417: Incorrect data', 'The email you provided is not correct.');
+          throw new Meteor.Error(440, 'Error 440: Incorrect data', 'The email you provided is not correct.');
         }
 
         if (password != confirmPass) {
-            throw new Meteor.Error(417, 'Error 417: Incorrect data', 'The passwords you provided did not match.');
+            throw new Meteor.Error(440, 'Error 440: Incorrect data', 'The passwords you provided did not match.');
         }
 
         Accounts.createUser({

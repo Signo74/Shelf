@@ -78,7 +78,7 @@
 </template>
 
 <template name="Shelf">
-  <div class="row card-panel teal">
+  <div class="row card-panel teal" ondragover="allowDrop(event)">
     <a class="btn-flat deleteCard remove">
       <i class="tiny material-icons">close</i>
     </a>
@@ -122,7 +122,7 @@
 </template>
 
 <template name="BookThumbnail">
-  <div class="col s2" draggable=true>
+  <div class="col s2" draggable="true">
     <div class="bookItem action-available card-panel teal lighten-1" align="center">
       <ul class="deleteCard-sm clean">
         <li>

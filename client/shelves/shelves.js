@@ -1,6 +1,8 @@
 let okCallback;
 let submitCallback;
 let selectedBook;
+let draggedBook;
+let originShelf;
 
 Template.ShelvesList.helpers({
   shelves: function() {
@@ -155,13 +157,30 @@ Template.Shelf.events({
     $('#newShelfDescription').val(this.desc);
 
     $('#newShelf').openModal();
+  },
+  'drop': function(ev) {
+    ev.preventDefault();
+    let shelvesArr = [];
+    shelvesArr.push(this);
+
+    Meteor.call('addBookToShelves', draggedBook, shelvesArr, function(error, result) {
+      if (!error) {
+        Meteor.call('removeBookFromShelf', draggedBook, originShelf);
+        draggedBook = '';
+        originShelf = '';
+      } else {
+        // TODO show error message.
+        Session.set('errorMessage', error.details);
+        Session.set('errorCode', parseInt(error.error));
+      }
+    });
   }
 });
 
 Template.Shelf.helpers({
   books: function() {
     let bookIDs = this.books;
-    if (bookIDs != undefined) {
+    if (bookIDs != undefined && bookIDs.length > 0) {
       return Books.find({$or:bookIDs});
     }
   }
@@ -236,6 +255,10 @@ Template.BookThumbnail.events({
   },
   'click .bookItem': function() {
     FlowRouter.go('/book/' + this._id);
+  },
+  'dragstart': function(ev) {
+    originShelf = Template.parentData(1)._id;
+    draggedBook = this._id;
   }
 });
 
@@ -267,6 +290,9 @@ Template.Shelf.onCreated(function() {
   self.subscribe('books');
 });
 
+allowDrop = function(ev) {
+  ev.preventDefault();
+}
 
 cleanNewBookModal = function() {
   // Reset the Spinner.
