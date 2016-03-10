@@ -5267,9 +5267,6 @@ nav {
   nav .nav-wrapper {
     position: relative;
     height: 100%; }
-    nav .nav-wrapper i {
-      display: block;
-      font-size: 2rem; }
   @media only screen and (min-width : 993px) {
     nav a.button-collapse {
       display: none; } }
@@ -5375,7 +5372,7 @@ nav {
     position: fixed; }
 
 @media only screen and (min-width : 601px) {
-  nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+  nav, nav a.button-collapse, nav a.button-collapse i {
     height: 64px;
     line-height: 64px; }
   .navbar-fixed {

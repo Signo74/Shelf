@@ -166,9 +166,9 @@ Template.Shelf.events({
     let shelvesArr = [];
     shelvesArr.push(this);
 
-    Meteor.call('addBookToShelves', draggedBook, shelvesArr, function(error, result) {
+    Meteor.call('addBookToShelves', draggedBook._id, shelvesArr, function(error, result) {
       if (!error) {
-        Meteor.call('removeBookFromShelf', draggedBook, originShelf);
+        Meteor.call('removeBookFromShelf', draggedBook._id, originShelf._id);
         draggedBook = '';
         originShelf = '';
       } else {
@@ -219,6 +219,20 @@ Template.AddShelf.events({
     cleanNewBookModal();
 
     $('#newBook').openModal();
+  },
+  'drop': function(ev) {
+    ev.preventDefault();
+
+    okCallback = function() {
+      Meteor.call('removeBookFromShelf', draggedBook._id, originShelf._id);
+    }
+
+    // TODO move all messages to a file for easier localization.
+    $('#dialogContent').html(`Are you sure you want to remove ${draggedBook.title} from your ${originShelf.title} Shelf?<br>This change will be permanent!`);
+
+    $('#dialog').openModal();
+    $('#addItemsFAB').removeClass('hidden');
+    $('#removeItemsFAB').addClass('hidden');
   }
 });
 
@@ -257,12 +271,19 @@ Template.BookThumbnail.events({
 
     $('#newBook').openModal();
   },
-  'click .bookItem': function() {
+  'click': function() {
     FlowRouter.go('/book/' + this._id);
   },
   'dragstart': function(ev) {
-    originShelf = Template.parentData(1)._id;
-    draggedBook = this._id;
+    originShelf = Template.parentData(1);
+    draggedBook = this;
+
+    $('#addItemsFAB').addClass('hidden');
+    $('#removeItemsFAB').removeClass('hidden');
+  },
+  'dragend': function(ev) {
+    $('#addItemsFAB').removeClass('hidden');
+    $('#removeItemsFAB').addClass('hidden');
   }
 });
 

@@ -8,21 +8,24 @@
         <ul class="right hide-on-med-and-down">
           <li><a href="/shelves">Shelves</a></li>
           <li><a href="/tests">Tests</a></li>
+          {{#if currentUser}}
+            <li><a id="logout">Logout</a></li>
+          {{else}}
           <li><a id="login">Login</a></li>
-          <li class="hidden loginForm sm-margin">
-              <input id="loginUser" type="text" name="username" value="" placeholder="username" tabindex="1">
-          </li>
-          <li class="hidden loginForm sm-margin">
-            <input id="loginPass" type="password" name="password" value="" placeholder="password" tabindex="2">
-          </li>
-          <li id="loginSubmit" class="hidden loginForm sm-margin" tabindex="3">
-            <a><i class="tiny material-icons">arrow_forward</i></a>
-          </li>
-          <li id="loginClose" class="hidden loginForm sm-margin" tabindex="4">
-            <a><i id="hideLoginForm" class="tiny material-icons">close</i></a>
-          </li>
-          <li><a id="registerUser" href="/register">Register</a></li>
-          <li><a id="logout" class="hidden">Logout</a></li>
+            <li class="hidden loginForm sm-margin">
+                <input id="loginUser" type="text" name="username" value="" placeholder="username" tabindex="1">
+            </li>
+            <li class="hidden loginForm sm-margin">
+              <input id="loginPass" type="password" name="password" value="" placeholder="password" tabindex="2">
+            </li>
+            <li id="loginSubmit" class="hidden loginForm sm-margin" tabindex="3">
+              <button class="btn-flat white-text icon-btn clean"><i class="material-icons">arrow_forward</i></button>
+            </li>
+            <li id="loginClose" class="hidden loginForm sm-margin" tabindex="4">
+              <button class="btn-flat white-text clean"><i id="hideLoginForm" class=" icon-btn material-icons">close</i></button>
+            </li>
+            <li><a id="registerUser" href="/register">Register</a></li>
+          {{/if}}
         </ul>
         <ul class="side-nav" id="mobile-demo">
           <li><a href="/shelves">Shelves</a></li>

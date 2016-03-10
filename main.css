@@ -78,6 +78,11 @@ i.x-small {
   display: none;
 }
 
+.icon-btn {
+  font-size: 1rem;
+  line-height: normal;
+}
+
 a {
   cursor: pointer;
 }
