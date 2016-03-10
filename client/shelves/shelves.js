@@ -129,6 +129,7 @@ Template.Shelf.events({
     $('#dialogContent').html(`Are you sure you want to delete the ${this.title} Shelf?<br>This change will be permanent and there is no way to undo it!`);
 
     $('#dialog').openModal();
+    $('#commonAbort').focus();
   },
   'click .addBook': function() {
     let tag = {
@@ -146,6 +147,7 @@ Template.Shelf.events({
     shelfTags.push(tag);
 
     $('#newBook').openModal();
+    $('#searchBooksInput').focus();
   },
   'click .edit':function() {
     let shelfID = this._id;
@@ -157,6 +159,7 @@ Template.Shelf.events({
     $('#newShelfDescription').val(this.desc);
 
     $('#newShelf').openModal();
+    $('#newShelfTitle').focus();
   },
   'drop': function(ev) {
     ev.preventDefault();
@@ -196,6 +199,7 @@ Template.AddShelf.events({
 
     cleanNewShelfModal();
     $('#newShelf').openModal();
+    $('#newShelfTitle').focus();
   },
   'click .addBook': function() {
     cleanupBookModal();

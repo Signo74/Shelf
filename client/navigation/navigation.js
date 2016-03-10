@@ -10,6 +10,7 @@ Template.Navigation.events({
     event.preventDefault();
     $('.loginForm').removeClass('hidden');
     $('#login').addClass('hidden');
+    $('#loginUser').focus();
   },
   "click #hideLoginForm": function(event, template){
     event.preventDefault();

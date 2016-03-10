@@ -10,16 +10,16 @@
           <li><a href="/tests">Tests</a></li>
           <li><a id="login">Login</a></li>
           <li class="hidden loginForm sm-margin">
-              <input id="loginUser" type="text" name="username" value="" placeholder="username">
+              <input id="loginUser" type="text" name="username" value="" placeholder="username" tabindex="1">
           </li>
           <li class="hidden loginForm sm-margin">
-            <input id="loginPass" type="password" name="password" value="" placeholder="password">
+            <input id="loginPass" type="password" name="password" value="" placeholder="password" tabindex="2">
           </li>
-          <li id="loginSubmit" class="hidden loginForm sm-margin">
-            <i class="tiny material-icons">arrow_forward</i>
+          <li id="loginSubmit" class="hidden loginForm sm-margin" tabindex="3">
+            <a><i class="tiny material-icons">arrow_forward</i></a>
           </li>
-          <li id="loginClose" class="hidden loginForm sm-margin">
-            <i id="hideLoginForm" class="tiny material-icons">close</i>
+          <li id="loginClose" class="hidden loginForm sm-margin" tabindex="4">
+            <a><i id="hideLoginForm" class="tiny material-icons">close</i></a>
           </li>
           <li><a id="registerUser" href="/register">Register</a></li>
           <li><a id="logout" class="hidden">Logout</a></li>

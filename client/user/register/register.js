@@ -25,3 +25,7 @@ Template.Register.events({
      });
   }
 });
+
+Template.Register.onRendered(function() {
+  $('#username').focus();
+})
