@@ -83,6 +83,13 @@ i.x-small {
   line-height: normal;
 }
 
+.book-title {
+  max-width: 200;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 a {
   cursor: pointer;
 }

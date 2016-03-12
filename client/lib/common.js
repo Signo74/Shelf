@@ -169,3 +169,13 @@ compareBookObjects = function(book1, book2) {
   }
   return true;
 }
+
+sortArrayByAddedOn = function(a,b) {
+  if (a.addedOn - b.addedOn < 0) {
+    return -1
+  } else if (a.addedOn - b.addedOn > 0) {
+    return 1
+  } else {
+    return 0;
+  }
+}

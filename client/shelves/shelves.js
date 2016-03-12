@@ -28,7 +28,6 @@ Template.ShelvesList.events({
   'click div.searchEntry': function() {
     // Assign the selected book
     selectedBook = this;
-    console.log(this);
     let book = this.volumeInfo;
     let authorsCount;
     let authors = '';
@@ -182,7 +181,21 @@ Template.Shelf.events({
 
 Template.Shelf.helpers({
   books: function() {
-    let bookIDs = this.books;
+    let bookIDs = [];
+    if (this.books) {
+      this.books.sort(sortArrayByAddedOn);
+    } else {
+      return;
+    }
+
+    for (book in this.books) {
+      let bookId = {
+        _id: this.books[book]._id
+      }
+
+      bookIDs.push(bookId);
+    }
+
     if (bookIDs != undefined && bookIDs.length > 0) {
       return Books.find({$or:bookIDs});
     }

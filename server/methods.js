@@ -52,6 +52,8 @@
       },
       addBookToShelves: function(id, shelves) {
         let q =  [];
+        let date = new Date();
+        let dateStr = date.toDateString()
         console.log(`Book ID to add: ${id}`);
 
         for (let i = 0 ; i < shelves.length ; i++) {
@@ -76,7 +78,8 @@
         }
         console.log(q);
 
-        Shelves.update({$or:q}, {$addToSet: {books: {'_id': id}}}, {multi:true});
+
+        Shelves.update({$or:q}, {$addToSet: {books: {'_id': id, addedOn: date, addedOnPretty: dateStr}}}, {multi:true});
       },
       removeBookFromShelf: function(bookId, shelfID) {
         Shelves.update({_id:shelfID},
